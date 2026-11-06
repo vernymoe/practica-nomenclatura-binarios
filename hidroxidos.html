@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Práctica: Hidróxidos (Nomenclatura Stock)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f6ff;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 { color: #2c3e50; }
+    #ejercicio {
+      font-size: 1.3em;
+      margin: 20px;
+      font-weight: bold;
+    }
+    input {
+      padding: 8px;
+      font-size: 1em;
+      margin: 10px;
+      width: 280px;
+    }
+    button {
+      padding: 10px 15px;
+      font-size: 1em;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+    }
+    button:hover { background-color: #dce6ff; }
+    #resultado {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hidróxidos - Nomenclatura Stock</h1>
+  <p>Escribe el <b>nombre</b> si aparece la fórmula, o la <b>fórmula</b> si aparece el nombre.</p>
+
+  <div id="ejercicio"></div>
+
+  <input type="text" id="respuesta" placeholder="Escribe tu respuesta aquí">
+  <br>
+  <button onclick="verificar()">Verificar</button>
+  <button onclick="nuevoEjercicio()">Nueva práctica</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    // ===== 1) Banco de metales con valencias (igual que en tus otras páginas) =====
+    const metales = [
+      // Alcalinos
+      { simbolo: "Li", nombre: "Litio", valencias: [1] },
+      { simbolo: "Na", nombre: "Sodio", valencias: [1] },
+      { simbolo: "K",  nombre: "Potasio", valencias: [1] },
+      { simbolo: "Rb", nombre: "Rubidio", valencias: [1] },
+      { simbolo: "Cs", nombre: "Cesio", valencias: [1] },
+      { simbolo: "Fr", nombre: "Francio", valencias: [1] },
+
+      // Alcalinotérreos
+      { simbolo: "Be", nombre: "Berilio", valencias: [2] },
+      { simbolo: "Mg", nombre: "Magnesio", valencias: [2] },
+      { simbolo: "Ca", nombre: "Calcio", valencias: [2] },
+      { simbolo: "Sr", nombre: "Estroncio", valencias: [2] },
+      { simbolo: "Ba", nombre: "Bario", valencias: [2] },
+      { simbolo: "Ra", nombre: "Radio", valencias: [2] },
+
+      // Transición y otros frecuentes
+      { simbolo: "Fe", nombre: "Hierro",   valencias: [2, 3] },
+      { simbolo: "Cu", nombre: "Cobre",    valencias: [1, 2] },
+      { simbolo: "Ag", nombre: "Plata",    valencias: [1] },
+      { simbolo: "Au", nombre: "Oro",      valencias: [1, 3] },
+      { simbolo: "Hg", nombre: "Mercurio", valencias: [1, 2] },
+      { simbolo: "Zn", nombre: "Zinc",     valencias: [2] },
+      { simbolo: "Cd", nombre: "Cadmio",   valencias: [2] },
+      { simbolo: "Ni", nombre: "Níquel",   valencias: [2, 3] },
+      { simbolo: "Co", nombre: "Cobalto",  valencias: [2, 3] },
+      { simbolo: "Mn", nombre: "Manganeso",valencias: [2, 3, 4, 6, 7] },
+      { simbolo: "Cr", nombre: "Cromo",    valencias: [2, 3, 6] },
+      { simbolo: "Pt", nombre: "Platino",  valencias: [2, 4] },
+      { simbolo: "Pd", nombre: "Paladio",  valencias: [2, 4] },
+      { simbolo: "Ti", nombre: "Titanio",  valencias: [3, 4] },
+      { simbolo: "Sn", nombre: "Estaño",   valencias: [2, 4] },
+      { simbolo: "Pb", nombre: "Plomo",    valencias: [2, 4] },
+      { simbolo: "Sb", nombre: "Antimonio",valencias: [3, 5] },
+      { simbolo: "Bi", nombre: "Bismuto",  valencias: [3, 5] },
+      { simbolo: "Al", nombre: "Aluminio", valencias: [3] },
+      { simbolo: "Ga", nombre: "Galio",    valencias: [3] },
+      { simbolo: "In", nombre: "Indio",    valencias: [3] },
+      { simbolo: "Tl", nombre: "Talio",    valencias: [1, 3] }
+    ];
+
+    // ===== 2) Lógica de práctica =====
+    let ejercicioActual = {};
+
+    function generarEjercicio() {
+      const metal = aleatorio(metales);
+      const valMetal = aleatorio(metal.valencias);
+
+      // Grupo hidróxido (OH) valencia -1
+      const valenciaOHabs = 1;
+
+      // Subíndices por cruce y simplificación (aquí mcd=1 siempre, pero dejamos la estructura)
+      let subMetal = valenciaOHabs; // 1
+      let subOH    = valMetal;
+      const d = mcd(subMetal, subOH);
+      subMetal /= d;
+      subOH    /= d;
+
+      // Fórmula: M(OH)n (si n=1 → MOH)
+      const formula =
+        metal.simbolo + (subMetal > 1 ? subMetal : "") +
+        (subOH > 1 ? "(OH)" + subOH : "OH");
+
+      // Nombre Stock
+      let nombre = "Hidróxido de " + metal.nombre;
+      if (metal.valencias.length > 1) {
+        nombre += " (" + numeroRomano(valMetal) + ")";
+      }
+
+      // Mostrar aleatoriamente nombre o fórmula
+      const mostrarFormula = Math.random() < 0.5;
+      ejercicioActual = {
+        pregunta: mostrarFormula ? formula : nombre,
+        respuesta: mostrarFormula ? nombre  : formula
+      };
+
+      document.getElementById("ejercicio").innerText = "👉 " + ejercicioActual.pregunta;
+      document.getElementById("resultado").innerText = "";
+      document.getElementById("respuesta").value = "";
+    }
+
+    function verificar() {
+      const resp = document.getElementById("respuesta").value.trim();
+      if (resp === ejercicioActual.respuesta) {
+        mostrarResultado("✅ Correcto", "green");
+      } else {
+        mostrarResultado("❌ Incorrecto. Respuesta correcta: " + ejercicioActual.respuesta, "red");
+      }
+    }
+
+    function nuevoEjercicio() { generarEjercicio(); }
+
+    // ===== 3) Utilidades =====
+    function aleatorio(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function mcd(a, b) { return b === 0 ? a : mcd(b, a % b); }
+    function numeroRomano(num) {
+      const rom = {1:"I",2:"II",3:"III",4:"IV",5:"V",6:"VI",7:"VII",8:"VIII",9:"IX",10:"X"};
+      return rom[num] || String(num);
+    }
+    function mostrarResultado(txt, color) {
+      const r = document.getElementById("resultado");
+      r.innerText = txt;
+      r.style.color = color;
+    }
+
+    // Primer ejercicio al cargar
+    window.onload = generarEjercicio;
+  </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Práctica: Óxidos Metálicos (Nomenclatura Stock)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f6ff;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        #ejercicio {
+            font-size: 1.3em;
+            margin: 20px;
+            font-weight: bold;
+        }
+        input {
+            padding: 8px;
+            font-size: 1em;
+            margin: 10px;
+            width: 250px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 1em;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+        }
+        button:hover {
+            background-color: #dce6ff;
+        }
+        #resultado {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Óxidos Metálicos - Nomenclatura Stock</h1>
+    <p>Escribe el <b>nombre</b> si aparece la fórmula, o la <b>fórmula</b> si aparece el nombre.</p>
+
+    <div id="ejercicio"></div>
+
+    <input type="text" id="respuesta" placeholder="Escribe tu respuesta aquí">
+    <br>
+    <button onclick="verificar()">Verificar</button>
+    <button onclick="nuevoEjercicio()">Nueva práctica</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        // Lista de metales con sus valencias más comunes
+        const metales = [
+            // Alcalinos
+            { simbolo: "Li", nombre: "Litio", valencias: [1] },
+            { simbolo: "Na", nombre: "Sodio", valencias: [1] },
+            { simbolo: "K", nombre: "Potasio", valencias: [1] },
+            { simbolo: "Rb", nombre: "Rubidio", valencias: [1] },
+            { simbolo: "Cs", nombre: "Cesio", valencias: [1] },
+            { simbolo: "Fr", nombre: "Francio", valencias: [1] },
+
+            // Alcalinotérreos
+            { simbolo: "Be", nombre: "Berilio", valencias: [2] },
+            { simbolo: "Mg", nombre: "Magnesio", valencias: [2] },
+            { simbolo: "Ca", nombre: "Calcio", valencias: [2] },
+            { simbolo: "Sr", nombre: "Estroncio", valencias: [2] },
+            { simbolo: "Ba", nombre: "Bario", valencias: [2] },
+            { simbolo: "Ra", nombre: "Radio", valencias: [2] },
+
+            // Metales de transición frecuentes
+            { simbolo: "Fe", nombre: "Hierro", valencias: [2, 3] },
+            { simbolo: "Cu", nombre: "Cobre", valencias: [1, 2] },
+            { simbolo: "Ag", nombre: "Plata", valencias: [1] },
+            { simbolo: "Au", nombre: "Oro", valencias: [1, 3] },
+            { simbolo: "Hg", nombre: "Mercurio", valencias: [1, 2] },
+            { simbolo: "Zn", nombre: "Zinc", valencias: [2] },
+            { simbolo: "Cd", nombre: "Cadmio", valencias: [2] },
+            { simbolo: "Ni", nombre: "Níquel", valencias: [2, 3] },
+            { simbolo: "Co", nombre: "Cobalto", valencias: [2, 3] },
+            { simbolo: "Mn", nombre: "Manganeso", valencias: [2, 3, 4, 6, 7] },
+            { simbolo: "Cr", nombre: "Cromo", valencias: [2, 3, 6] },
+            { simbolo: "Pt", nombre: "Platino", valencias: [2, 4] },
+            { simbolo: "Pd", nombre: "Paladio", valencias: [2, 4] },
+            { simbolo: "Ti", nombre: "Titanio", valencias: [3, 4] },
+            { simbolo: "Sn", nombre: "Estaño", valencias: [2, 4] },
+            { simbolo: "Pb", nombre: "Plomo", valencias: [2, 4] },
+            { simbolo: "Sb", nombre: "Antimonio", valencias: [3, 5] },
+            { simbolo: "Bi", nombre: "Bismuto", valencias: [3, 5] },
+
+            // Otros importantes
+            { simbolo: "Al", nombre: "Aluminio", valencias: [3] },
+            { simbolo: "Ga", nombre: "Galio", valencias: [3] },
+            { simbolo: "In", nombre: "Indio", valencias: [3] },
+            { simbolo: "Tl", nombre: "Talio", valencias: [1, 3] }
+        ];
+
+        let ejercicioActual = {};
+
+        function generarEjercicio() {
+            const metal = metales[Math.floor(Math.random() * metales.length)];
+            const valencia = metal.valencias[Math.floor(Math.random() * metal.valencias.length)];
+            
+            // Fórmula del óxido: MxOy
+            const oxigenoValencia = -2;
+            const molesMetal = Math.abs(oxigenoValencia) / mcd(Math.abs(valencia), Math.abs(oxigenoValencia));
+            const molesOxigeno = Math.abs(valencia) / mcd(Math.abs(valencia), Math.abs(oxigenoValencia));
+
+            let formula = metal.simbolo + (molesMetal > 1 ? molesMetal : "") + "O" + (molesOxigeno > 1 ? molesOxigeno : "");
+            
+            let nombre = "Óxido de " + metal.nombre;
+            if (metal.valencias.length > 1) {
+                nombre += " (" + numeroRomano(valencia) + ")";
+            }
+
+            // Aleatoriamente mostrar fórmula o nombre
+            const mostrarFormula = Math.random() < 0.5;
+            ejercicioActual = {
+                pregunta: mostrarFormula ? formula : nombre,
+                respuesta: mostrarFormula ? nombre : formula
+            };
+
+            document.getElementById("ejercicio").innerText = "👉 " + ejercicioActual.pregunta;
+            document.getElementById("resultado").innerText = "";
+            document.getElementById("respuesta").value = "";
+        }
+
+        function verificar() {
+            const resp = document.getElementById("respuesta").value.trim();
+            if (resp.toLowerCase() === ejercicioActual.respuesta.toLowerCase()) {
+                document.getElementById("resultado").innerText = "✅ Correcto";
+                document.getElementById("resultado").style.color = "green";
+            } else {
+                document.getElementById("resultado").innerText = "❌ Incorrecto. Respuesta correcta: " + ejercicioActual.respuesta;
+                document.getElementById("resultado").style.color = "red";
+            }
+        }
+
+        function nuevoEjercicio() {
+            generarEjercicio();
+        }
+
+        function mcd(a, b) {
+            return b === 0 ? a : mcd(b, a % b);
+        }
+
+        function numeroRomano(num) {
+            const romanos = {1:"I",2:"II",3:"III",4:"IV",5:"V",6:"VI",7:"VII"};
+            return romanos[num] || num;
+        }
+
+        // Generar el primer ejercicio al cargar
+        window.onload = generarEjercicio;
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Química: Nomenclatura - Prácticas Interactivas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#f2f6ff; --text:#1f2a44; --accent:#3b71fe; --card:#ffffff; --muted:#5c6b8a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text);
+      display:flex; min-height:100vh; flex-direction:column;
+    }
+    header{
+      padding:28px 16px; text-align:center;
+    }
+    header h1{margin:0 0 8px; font-size:28px}
+    header p{margin:0; color:var(--muted)}
+    .grid{
+      width:min(1100px, 95%); margin:24px auto 40px; display:grid; gap:16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+    .card{
+      background:var(--card); border-radius:16px; padding:18px; box-shadow:0 6px 18px rgba(0,0,0,.06);
+      display:flex; flex-direction:column; justify-content:space-between; min-height:170px;
+      border:1px solid rgba(0,0,0,.05);
+    }
+    .card h3{margin:0 0 8px; font-size:18px}
+    .card p{margin:0 0 14px; color:var(--muted); line-height:1.4}
+    .tag{display:inline-block; font-size:12px; background:#eaf0ff; color:#2749a6; padding:2px 8px; border-radius:999px; margin-bottom:10px}
+    .btn{
+      display:inline-block; text-decoration:none; background:var(--accent); color:#fff; padding:10px 14px;
+      border-radius:10px; font-weight:bold; transition:transform .05s ease, opacity .2s ease;
+      text-align:center;
+    }
+    .btn:hover{opacity:.92; transform:translateY(-1px)}
+    footer{
+      margin-top:auto; text-align:center; padding:18px; color:var(--muted); font-size:14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Química: Nomenclatura – Prácticas Interactivas</h1>
+    <p>Elige un módulo para practicar: escribe el <b>nombre</b> cuando veas la <b>fórmula</b> o viceversa.</p>
+  </header>
+
+  <main class="grid">
+    <!-- Óxidos metálicos (Stock) -->
+    <article class="card">
+      <span class="tag">Stock</span>
+      <h3>Óxidos metálicos</h3>
+      <p>Metal + O<sub>−2</sub>. Usa número romano si el metal tiene varias valencias.</p>
+      <a class="btn" href="oxidos_metalicos.html">Abrir práctica</a>
+    </article>
+
+    <!-- Hidruros (Stock) -->
+    <article class="card">
+      <span class="tag">Stock</span>
+      <h3>Hidruros metálicos</h3>
+      <p>Metal + H<sub>−1</sub>. “Hidruro de …” y número romano si aplica.</p>
+      <a class="btn" href="hidruros.html">Abrir práctica</a>
+    </article>
+
+    <!-- Sales binarias (Stock) -->
+    <article class="card">
+      <span class="tag">Stock</span>
+      <h3>Sales binarias</h3>
+      <p>Metal + radical simple (−1, −2, −3…). “...uro de … (número romano)”.</p>
+      <a class="btn" href="sales_binarias.html">Abrir práctica</a>
+    </article>
+
+    <!-- Hidróxidos (Stock) -->
+    <article class="card">
+      <span class="tag">Stock</span>
+      <h3>Hidróxidos</h3>
+      <p>Metal + (OH)<sub>−1</sub>. “Hidróxido de … (número romano)”.</p>
+      <a class="btn" href="hidroxidos.html">Abrir práctica</a>
+    </article>
+
+    <!-- Óxidos no metálicos (Estequiométrica) -->
+    <article class="card">
+      <span class="tag">Estequiométrica</span>
+      <h3>Óxidos no metálicos</h3>
+      <p>Prefijos (mono, di, tri…). El primer no metal no usa “mono”.</p>
+      <a class="btn" href="oxidos_no_metalicos.html">Abrir práctica</a>
+    </article>
+
+    <!-- Hidrácidos (ac) y (g) -->
+    <article class="card">
+      <span class="tag">Ácidos / Gases</span>
+      <h3>Hidrácidos</h3>
+      <p>(ac): Ácido …hídrico. &nbsp; (g): …uro de hidrógeno.</p>
+      <a class="btn" href="hidrácidos.html">Abrir práctica</a>
+    </article>
+
+    <!-- No metales – binarios -->
+    <article class="card">
+      <span class="tag">Estequiométrica</span>
+      <h3>Compuestos entre no metales</h3>
+      <p>Ambos con prefijos. El segundo termina en “−uro”.</p>
+      <a class="btn" href="no_metales.html">Abrir práctica</a>
+    </article>
+  </main>
+
+  <footer>
+    © 2025 – Prácticas de Nomenclatura · Verny
+  </footer>
+</body>
+</html>

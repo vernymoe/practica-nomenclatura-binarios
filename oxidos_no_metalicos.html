@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Práctica: Óxidos No Metálicos (Nomenclatura Estequiométrica)</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f9f9f9; text-align: center; padding: 20px; }
+    h1 { color: #2c3e50; }
+    #ejercicio { font-size: 1.3em; margin: 20px; font-weight: bold; }
+    input { padding: 8px; font-size: 1em; margin: 10px; width: 280px; }
+    button { padding: 10px 15px; font-size: 1em; margin: 10px; cursor: pointer; border-radius: 5px; border: none; }
+    button:hover { background-color: #dce6ff; }
+    #resultado { margin-top: 20px; font-size: 1.2em; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Óxidos No Metálicos - Nomenclatura Estequiométrica</h1>
+  <p>Escribe el <b>nombre</b> si aparece la fórmula, o la <b>fórmula</b> si aparece el nombre.</p>
+
+  <div id="ejercicio"></div>
+
+  <input type="text" id="respuesta" placeholder="Escribe tu respuesta aquí">
+  <br>
+  <button onclick="verificar()">Verificar</button>
+  <button onclick="nuevoEjercicio()">Nueva práctica</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    // ====== 1) No metales comunes que forman óxidos ======
+    const noMetales = [
+      { simbolo: "C", nombre: "Carbono" },
+      { simbolo: "N", nombre: "Nitrógeno" },
+      { simbolo: "P", nombre: "Fósforo" },
+      { simbolo: "S", nombre: "Azufre" },
+      { simbolo: "Cl", nombre: "Cloro" },
+      { simbolo: "Br", nombre: "Bromo" },
+      { simbolo: "I", nombre: "Yodo" }
+    ];
+
+    // Prefijos griegos
+    const prefijos = {
+      1: "mono", 2: "di", 3: "tri", 4: "tetra",
+      5: "penta", 6: "hexa", 7: "hepta", 8: "octa"
+    };
+
+    let ejercicioActual = {};
+
+    // ====== 2) Generar ejercicio ======
+    function generarEjercicio() {
+      const nm = aleatorio(noMetales);
+      const oxVal = -2; // oxígeno
+      const valNoMetal = Math.floor(Math.random() * 5) + 1; // 1 a 5
+
+      // Ajustar proporción (cruzar cargas)
+      const mcdVal = mcd(valNoMetal, Math.abs(oxVal));
+      const subNoMetal = Math.abs(oxVal) / mcdVal;
+      const subO = valNoMetal / mcdVal;
+
+      // Fórmula: N₂O₅, etc.
+      let formula = nm.simbolo + (subNoMetal > 1 ? subNoMetal : "") +
+                    "O" + (subO > 1 ? subO : "");
+
+      // Nombre estequiométrico
+      let nombre = "";
+      if (subO > 1) {
+        nombre += capitalizar(prefijos[subO]) + "óxido";
+      } else {
+        nombre += "Monóxido";
+      }
+
+      nombre += " de ";
+
+      if (subNoMetal > 1) {
+        nombre += prefijos[subNoMetal] + nm.nombre.toLowerCase();
+      } else {
+        nombre += nm.nombre.toLowerCase();
+      }
+
+      // Guardar ejercicio
+      const mostrarFormula = Math.random() < 0.5;
+      ejercicioActual = {
+        pregunta: mostrarFormula ? formula : nombre,
+        respuesta: mostrarFormula ? nombre : formula
+      };
+
+      document.getElementById("ejercicio").innerText = "👉 " + ejercicioActual.pregunta;
+      document.getElementById("resultado").innerText = "";
+      document.getElementById("respuesta").value = "";
+    }
+
+    function verificar() {
+      const resp = document.getElementById("respuesta").value.trim();
+      if (resp === ejercicioActual.respuesta) {
+        mostrarResultado("✅ Correcto", "green");
+      } else {
+        mostrarResultado("❌ Incorrecto. Respuesta correcta: " + ejercicioActual.respuesta, "red");
+      }
+    }
+
+    function nuevoEjercicio() { generarEjercicio(); }
+
+    // ====== 3) Utilidades ======
+    function aleatorio(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function mcd(a, b) { return b === 0 ? a : mcd(b, a % b); }
+    function capitalizar(txt) { return txt.charAt(0).toUpperCase() + txt.slice(1); }
+    function mostrarResultado(txt, color) {
+      const r = document.getElementById("resultado");
+      r.innerText = txt;
+      r.style.color = color;
+    }
+
+    // Arrancar
+    window.onload = generarEjercicio;
+  </script>
+</body>
+</html>

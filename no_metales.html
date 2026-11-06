@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Práctica: Compuestos Binarios entre No Metales</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f2f6ff; text-align: center; padding: 20px; }
+    h1 { color: #2c3e50; }
+    #ejercicio { font-size: 1.3em; margin: 20px; font-weight: bold; }
+    input { padding: 8px; font-size: 1em; margin: 10px; width: 280px; }
+    button { padding: 10px 15px; font-size: 1em; margin: 10px; cursor: pointer; border-radius: 5px; border: none; }
+    button:hover { background-color: #dce6ff; }
+    #resultado { margin-top: 20px; font-size: 1.2em; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Compuestos Binarios entre No Metales</h1>
+  <p>Escribe el <b>nombre</b> si aparece la fórmula, o la <b>fórmula</b> si aparece el nombre.</p>
+
+  <div id="ejercicio"></div>
+
+  <input type="text" id="respuesta" placeholder="Escribe tu respuesta aquí">
+  <br>
+  <button onclick="verificar()">Verificar</button>
+  <button onclick="nuevoEjercicio()">Nueva práctica</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    // ===== 1) No metales =====
+    const noMetales = [
+      { simbolo: "C", nombre: "Carbono" },
+      { simbolo: "N", nombre: "Nitrógeno" },
+      { simbolo: "P", nombre: "Fósforo" },
+      { simbolo: "S", nombre: "Azufre" },
+      { simbolo: "B", nombre: "Boro" },
+      { simbolo: "F", nombre: "Flúor" },
+      { simbolo: "Cl", nombre: "Cloro" },
+      { simbolo: "Br", nombre: "Bromo" },
+      { simbolo: "I", nombre: "Yodo" }
+    ];
+
+    // Prefijos griegos
+    const prefijos = {
+      1: "mono", 2: "di", 3: "tri", 4: "tetra",
+      5: "penta", 6: "hexa", 7: "hepta", 8: "octa"
+    };
+
+    let ejercicioActual = {};
+
+    // ===== 2) Generar Ejercicio =====
+    function generarEjercicio() {
+      // Elegir dos no metales distintos
+      let n1, n2;
+      do {
+        n1 = aleatorio(noMetales);
+        n2 = aleatorio(noMetales);
+      } while (n1.simbolo === n2.simbolo);
+
+      // Subíndices aleatorios (1–4 para el primero, 1–5 para el segundo)
+      const sub1 = Math.floor(Math.random() * 4) + 1;
+      const sub2 = Math.floor(Math.random() * 5) + 1;
+
+      // Fórmula
+      const formula = n1.simbolo + (sub1 > 1 ? sub1 : "") +
+                      n2.simbolo + (sub2 > 1 ? sub2 : "");
+
+      // Nombre
+      let nombre = "";
+
+      // Prefijo para segundo elemento (siempre, incluso si es 1)
+      nombre = (sub2 > 1 ? capitalizar(prefijos[sub2]) : "Mono") + limpiarNombre(n2.nombre);
+
+      // Prefijo para primer elemento (solo si >1)
+      let primero = "";
+      if (sub1 > 1) {
+        primero = capitalizar(prefijos[sub1]) + " " + n1.nombre.toLowerCase();
+      } else {
+        primero = n1.nombre.toLowerCase();
+      }
+
+      // Nombre completo: [prefijoSegundo+uro] de [primero]
+      const nombreCompuesto = nombre + " de " + primero;
+
+      // Guardar ejercicio
+      const mostrarFormula = Math.random() < 0.5;
+      ejercicioActual = {
+        pregunta: mostrarFormula ? formula : capitalizar(nombreCompuesto),
+        respuesta: mostrarFormula ? capitalizar(nombreCompuesto) : formula
+      };
+
+      document.getElementById("ejercicio").innerText = "👉 " + ejercicioActual.pregunta;
+      document.getElementById("resultado").innerText = "";
+      document.getElementById("respuesta").value = "";
+    }
+
+    function verificar() {
+      const resp = document.getElementById("respuesta").value.trim();
+      if (resp === ejercicioActual.respuesta) {
+        mostrarResultado("✅ Correcto", "green");
+      } else {
+        mostrarResultado("❌ Incorrecto. Respuesta correcta: " + ejercicioActual.respuesta, "red");
+      }
+    }
+
+    function nuevoEjercicio() { generarEjercicio(); }
+
+    // ===== 3) Utilidades =====
+    function aleatorio(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function capitalizar(txt) { return txt.charAt(0).toUpperCase() + txt.slice(1); }
+    function limpiarNombre(nombre) {
+      return nombre
+        .replace(/Flúor/i, "fluoruro")
+        .replace(/Cloro/i, "cloruro")
+        .replace(/Bromo/i, "bromuro")
+        .replace(/Yodo/i, "yoduro")
+        .replace(/Azufre/i, "sulfuro")
+        .replace(/Selenio/i, "seleniuro")
+        .replace(/Telurio/i, "telururo")
+        .replace(/Carbono/i, "carburo")
+        .replace(/Nitrógeno/i, "nitruro")
+        .replace(/Fósforo/i, "fosfuro")
+        .replace(/Boro/i, "boruro");
+    }
+    function mostrarResultado(txt, color) {
+      const r = document.getElementById("resultado");
+      r.innerText = txt;
+      r.style.color = color;
+    }
+
+    // Primer ejercicio
+    window.onload = generarEjercicio;
+  </script>
+</body>
+</html>
