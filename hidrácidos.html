@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Práctica: Hidrácidos</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f2f6ff; text-align: center; padding: 20px; }
+    h1 { color: #2c3e50; }
+    #ejercicio { font-size: 1.3em; margin: 20px; font-weight: bold; }
+    input { padding: 8px; font-size: 1em; margin: 10px; width: 280px; }
+    button { padding: 10px 15px; font-size: 1em; margin: 10px; cursor: pointer; border-radius: 5px; border: none; }
+    button:hover { background-color: #dce6ff; }
+    #resultado { margin-top: 20px; font-size: 1.2em; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Hidrácidos - Nomenclatura</h1>
+  <p>Escribe el <b>nombre</b> si aparece la fórmula, o la <b>fórmula</b> si aparece el nombre.</p>
+
+  <div id="ejercicio"></div>
+
+  <input type="text" id="respuesta" placeholder="Escribe tu respuesta aquí">
+  <br>
+  <button onclick="verificar()">Verificar</button>
+  <button onclick="nuevoEjercicio()">Nueva práctica</button>
+
+  <div id="resultado"></div>
+
+  <script>
+    // ===== 1) No metales comunes para hidrácidos =====
+    const noMetales = [
+      { simbolo: "F", nombre: "Fluoruro" },
+      { simbolo: "Cl", nombre: "Cloruro" },
+      { simbolo: "Br", nombre: "Bromuro" },
+      { simbolo: "I", nombre: "Yoduro" },
+      { simbolo: "S", nombre: "Sulfuro" },
+      { simbolo: "Se", nombre: "Seleniuro" },
+      { simbolo: "Te", nombre: "Telururo" }
+    ];
+
+    let ejercicioActual = {};
+
+    // ===== 2) Generar Ejercicio =====
+    function generarEjercicio() {
+      const nm = aleatorio(noMetales);
+
+      // Fórmula (H siempre +1, no metal negativo según "uro")
+      const valenciaNM = -1; // para halógenos
+      let subH = 1;
+      let subNM = 1;
+
+      // Excepciones para elementos del grupo 16 (S, Se, Te con valencia -2)
+      if (["S","Se","Te"].includes(nm.simbolo)) {
+        subH = 2; // H2S, H2Se, H2Te
+      }
+
+      // Generar fórmula
+      const formula = "H" + (subH > 1 ? subH : "") + nm.simbolo + (subNM > 1 ? subNM : "");
+
+      // Estado aleatorio: (ac) o (g)
+      const esAcuoso = Math.random() < 0.5;
+      const estado = esAcuoso ? "(ac)" : "(g)";
+
+      // Nombre
+      let nombre;
+      if (esAcuoso) {
+        // Ácido + raíz + hídrico
+        let raiz = nm.nombre.replace("uro", ""); // cloruro -> clor
+        nombre = "Ácido " + raiz + "hídrico";
+      } else {
+        // …uro de Hidrógeno
+        nombre = nm.nombre + " de Hidrógeno";
+      }
+
+      const formulaCompleta = formula + " " + estado;
+
+      // Alternar entre mostrar nombre o fórmula
+      const mostrarFormula = Math.random() < 0.5;
+      ejercicioActual = {
+        pregunta: mostrarFormula ? formulaCompleta : nombre,
+        respuesta: mostrarFormula ? nombre : formulaCompleta
+      };
+
+      document.getElementById("ejercicio").innerText = "👉 " + ejercicioActual.pregunta;
+      document.getElementById("resultado").innerText = "";
+      document.getElementById("respuesta").value = "";
+    }
+
+    function verificar() {
+      const resp = document.getElementById("respuesta").value.trim();
+      if (resp === ejercicioActual.respuesta) {
+        mostrarResultado("✅ Correcto", "green");
+      } else {
+        mostrarResultado("❌ Incorrecto. Respuesta correcta: " + ejercicioActual.respuesta, "red");
+      }
+    }
+
+    function nuevoEjercicio() { generarEjercicio(); }
+
+    // ===== 3) Utilidades =====
+    function aleatorio(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function mostrarResultado(txt, color) {
+      const r = document.getElementById("resultado");
+      r.innerText = txt;
+      r.style.color = color;
+    }
+
+    // Primer ejercicio al cargar
+    window.onload = generarEjercicio;
+  </script>
+</body>
+</html>
